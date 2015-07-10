@@ -1,0 +1,15 @@
+{
+  "name": "threejs-bouncing-ball",
+  "version": "0.0.1",
+  "description": "Simple bouncing sphere in a cube program",
+  "main": "app.js",
+  "author": "Nick Italiano",
+  "license": "ISC",
+  "keywords": [
+    "three.js"
+  ],
+  "dependencies": {
+    "express": "^4.13.1",
+    "express-handlebars": "^2.0.1"
+  }
+}
