@@ -1,0 +1,8 @@
+{
+  "name": "threejs-bouncing-ball",
+  "version": "0.0.1",
+  "description": "Simple bouncing sphere in a cube program",
+  "dependencies": {
+    "three.js": "^0.71.0"
+  }
+}
