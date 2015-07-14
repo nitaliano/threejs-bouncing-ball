@@ -36595,14 +36595,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
  var THREE = __webpack_require__(1),
- 	util = __webpack_require__(2);
+ 	util = __webpack_require__(2),
+ 	FloorConstants = __webpack_require__(29);
 
  module.exports = Floor;
 
  function Floor() {
  	Floor.super_.call(
  		this,
- 		new THREE.PlaneGeometry(1000, 1000, 10, 10),
+ 		new THREE.PlaneGeometry(FloorConstants.SIZE, FloorConstants.SIZE, 10, 10),
  		new THREE.MeshBasicMaterial({ color: 0x444444, side: THREE.DoubleSide })
  	);
  	this.name = 'floor';
@@ -36862,23 +36863,36 @@
 /***/ function(module, exports, __webpack_require__) {
 
  var Keys = __webpack_require__(21),
+ 	Floor = __webpack_require__(29),
  	boxPosition= { x: 0, z: 0};
 
  module.exports = function (entities) {
  	var entity = entities.container;
 
  	if (entity.components.box && entity.components.moveable) {
- 		entity.components.box.position.x += boxPosition.x;
- 		entity.components.box.position.z += boxPosition.z;
- 	}
+ 		var dx = entity.components.box.position.x + boxPosition.x;
+ 		var dz = entity.components.box.position.z + boxPosition.z;
 
- 	if (entities.balls) {
- 		for (var i = 0; i < entities.balls.length; i++) {
- 			entities.balls[i].components.sphere.position.x += boxPosition.x;
- 			entities.balls[i].components.sphere.position.z += boxPosition.z;
+ 		if (isInBounds(dx, dz)) {
+ 			entity.components.box.position.x = dx;
+ 			entity.components.box.position.z = dz;
+
+ 			if (entities.balls) {
+ 				for (var i = 0; i < entities.balls.length; i++) {
+ 					entities.balls[i].components.sphere.position.x += boxPosition.x;
+ 					entities.balls[i].components.sphere.position.z += boxPosition.z;
+ 				}
+ 			}
  		}
  	}
  };
+
+ function isInBounds(dx, dz) {
+ 	if ((dx < Floor.BOUNDS.SMALL || dz < Floor.BOUNDS.SMALL) || (dx > Floor.BOUNDS.LARGE || dz > Floor.BOUNDS.LARGE)) {
+ 		return false;
+ 	}
+ 	return true;
+ }
 
  document.addEventListener('keydown', function (e) {
  	switch (e.keyCode) {
@@ -36903,6 +36917,22 @@
  	boxPosition.x = 0;
  	boxPosition.z = 0;
  });
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+ var Box = __webpack_require__(3);
+
+ var Floor = {};
+
+ Floor.SIZE = 1000;
+ Floor.BOUNDS = {
+ 	LARGE: Floor.SIZE / 2 - Box.SIZE / 2,
+ 	SMALL: -Floor.SIZE / 2 + Box.SIZE / 2
+ };
+
+ module.exports = Floor;
 
 /***/ }
 /******/ ]);

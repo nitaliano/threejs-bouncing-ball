@@ -1,12 +1,13 @@
 var THREE = require('three.js'),
-	util = require('util');
+	util = require('util'),
+	FloorConstants = require('../constants/floor');
 
 module.exports = Floor;
 
 function Floor() {
 	Floor.super_.call(
 		this,
-		new THREE.PlaneGeometry(1000, 1000, 10, 10),
+		new THREE.PlaneGeometry(FloorConstants.SIZE, FloorConstants.SIZE, 10, 10),
 		new THREE.MeshBasicMaterial({ color: 0x444444, side: THREE.DoubleSide })
 	);
 	this.name = 'floor';
