@@ -1,26 +1,30 @@
-var Bounds = require('../constants/bounds');
+var Bounds = require('../constants/box').BOUNDS;
 
 module.exports = function (entities, dt) {
-	entities.forEach(function (entity) {
+	entities.balls.forEach(function (entity) {
 		if (entity.components.sphere && entity.components.velocity) {
-			entity.components.sphere.mesh.position.x = getUpdatedBallPosition('x', dt, entity);
-			entity.components.sphere.mesh.position.y = getUpdatedBallPosition('y', dt, entity);
-			entity.components.sphere.mesh.position.z = getUpdatedBallPosition('z', dt, entity);
+			entity.components.sphere.position.x = getUpdatedBallPosition('x', dt, entity, entities.container);
+			entity.components.sphere.position.y = getUpdatedBallPosition('y', dt, entity, entities.container);
+			entity.components.sphere.position.z = getUpdatedBallPosition('z', dt, entity, entities.container);
 		}
 	});
 };
 
-function getUpdatedBallPosition(axis, dt, entity) {
-	var position = entity.components.sphere.mesh.position[axis] + entity.components.velocity[axis] * dt;
+function getUpdatedBallPosition(axis, dt, entity, parentEntity) {
+	var isY = axis === 'y';
+	var position = entity.components.sphere.position[axis] + entity.components.velocity[axis] * dt / 2;
 
-	// make sure we're in bounds
-	if (position <= Bounds.SMALL) {
-		position += 2.5;
+	if (isY && position < Bounds.Y_SMALL) {
+		position += 1;
 		entity.components.velocity[axis] = -entity.components.velocity[axis];
-	}
-
-	if (position >= Bounds.LARGE) {
-		position -= 2.5;
+	} else if (isY && position > Bounds.Y_LARGE) {
+		position -= 1;
+		entity.components.velocity[axis] = -entity.components.velocity[axis];
+	} else if (position < Bounds.XZ_SMALL + parentEntity.components.box.position[axis]) {
+		position += 1;
+		entity.components.velocity[axis] = -entity.components.velocity[axis];
+	} else if (position > Bounds.XZ_LARGE + parentEntity.components.box.position[axis]) {
+		position -= 1;
 		entity.components.velocity[axis] = -entity.components.velocity[axis];
 	}
 

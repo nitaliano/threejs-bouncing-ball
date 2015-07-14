@@ -8,32 +8,29 @@ gulp.task('clean', function () {
 	del(['build/*']);
 });
 
-gulp.task('bundle', function (cb) {
+gulp.task('bundle', function () {
 	var bundler = webpack(require('./webpack.config.js'));
 
 	if (watch) {
-		bundler.watch(200, bundle(cb));
+		bundler.watch(200, bundle);
 	} else {
-		bundler.run(bundle(cb));
+		bundler.run(bundle);
 	}
 });
 
-gulp.task('build', function (cb) {
-	runSequence(['clean', 'bundle'], cb);
+gulp.task('build', function () {
+	runSequence(['clean', 'bundle']);
 });
 
-gulp.task('build:watch', function (cb) {
+gulp.task('build:watch', function () {
 	watch = true;
-	runSequence(['build'], cb);
+	runSequence(['build']);
 });
 
-function bundle(cb) {
-	return function (err, stats) {
-		if (err) {
-			console.log(err);
-			return cb();
-		}
-		console.log(stats.toString());
-		return cb();
+function bundle(err, stats) {
+	if (err) {
+		console.log(err);
+		return;
 	}
+	console.log(stats.toString());
 }

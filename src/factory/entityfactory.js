@@ -7,7 +7,8 @@ var Components = {
 	Light: require('../components/light'),
 	Moveable: require('../components/moveable'),
 	Sphere: require('../components/sphere'),
-	Velocity: require('../components/velocity')
+	Velocity: require('../components/velocity'),
+	Floor: require('../components/floor')
 };
 
 module.exports = {
@@ -16,6 +17,12 @@ module.exports = {
 			.addComponent(new Components.Apperance())
 			.addComponent(new Components.Sphere())
 			.addComponent(new Components.Velocity())
+	},
+
+	floor: function () {
+		return new Entity()
+			.addComponent(new Components.Apperance())
+			.addComponent(new Components.Floor());
 	},
 
 	container: function () {

@@ -1,4 +1,5 @@
 var entityFactory = require('./factory/entityfactory'),
+	THREE = require('three.js'),
 	threeFactory = require('./factory/threefactory');
 
 require('./styles/app.css');
@@ -9,30 +10,47 @@ function Game() {
 	var camera = threeFactory.camera();
 	var clock = threeFactory.clock();
 
-	var entities = [
-		entityFactory.ball(),
-		entityFactory.container(),
-		entityFactory.light()
-	];
+	camera.lookAt(scene.position);
+
+	var entities = {
+		floor: entityFactory.floor(),
+		container: entityFactory.container(),
+		light: entityFactory.light(),
+		balls: []
+	};
+
+	for (var i = 0; i < 10; i++) {
+		var ball = entityFactory.ball();
+		entities.container.components.box.add(ball.components.sphere);
+		entities.balls.push(ball);
+	}
 
 	var systems = [
-		require('./systems/userinput'),
-		require('./systems/ballanimation')
+		require('./systems/ballanimation'),
+		require('./systems/userinput')
 	];
 
 	Game.prototype.init = function () {
-		entities.forEach(function (entity) {
-			if (entity.components.apperance) {
-				Object.keys(entity.components).forEach(function (componentName) {
-					var component = entity.components[componentName];
-
-					if (component && component.mesh) {
-						scene.add(component.mesh);
-					}
-				});
+		Object.keys(entities).forEach(function (entityName) {
+			if (entities[entityName].length) {
+				entities[entityName].forEach(game.addToScene);
+			} else {
+				game.addToScene(entities[entityName]);
 			}
 		});
 		requestAnimationFrame(game.render);
+	};
+
+	Game.prototype.addToScene = function (entity) {
+		if (entity.components.apperance) {
+			Object.keys(entity.components).forEach(function (componentName) {
+				var component = entity.components[componentName];
+
+				if (component && component instanceof THREE.Mesh || component instanceof  THREE.Light) {
+					scene.add(component);
+				}
+			});
+		}
 	};
 
 	Game.prototype.render = function () {

@@ -1,10 +1,17 @@
-var VelocityConstants = require('../constants/velocity');
+var VelocityConstants = require('../constants/velocity'),
+	util = require('util'),
+	THREE = require('three.js');
 
 module.exports = Velocity;
 
 function Velocity() {
+	Velocity.super_.call(
+		this,
+		Math.random() * VelocityConstants.BASE,
+		Math.random() * VelocityConstants.BASE,
+		Math.random() * VelocityConstants.BASE
+	);
 	this.name = 'velocity';
-	this.x = Math.random() * VelocityConstants.BASE;
-	this.y = Math.random() * VelocityConstants.BASE;
-	this.z = Math.random() * VelocityConstants.BASE;
 }
+
+util.inherits(Velocity, THREE.Vector3);

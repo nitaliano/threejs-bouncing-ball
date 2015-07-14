@@ -1,11 +1,14 @@
-var THREE = require('three.js');
+var THREE = require('three.js'),
+	util = require('util');
 
 module.exports = Light;
 
 function Light() {
+	Light.super_.call(this, 0xffffff);
 	this.name = 'light';
-	this.mesh = new THREE.PointLight(0xffffff);
-	this.mesh.position.x = 10;
-	this.mesh.position.y = 50;
-	this.mesh.position.z = 130;
+	this.position.x = 0;
+	this.position.y = 0;
+	this.position.z = 800;
 }
+
+util.inherits(Light, THREE.PointLight);
