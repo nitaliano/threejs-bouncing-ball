@@ -6,11 +6,27 @@ require('./styles/app.css');
 function Game() {
 	var game = this;
 	var scene = threeFactory.scene();
+	var bgScene = threeFactory.scene();
 	var renderer = threeFactory.renderer();
-	var camera = threeFactory.camera();
+	var camera = threeFactory.perspectiveCamera(0, 100, 900);
+	var bgCamera = threeFactory.camera();
 	var clock = threeFactory.clock();
 
 	camera.lookAt(scene.position);
+
+	var bgTexture = THREE.ImageUtils.loadTexture(require('./assets/bg.jpg'));
+
+	var bgMesh = new THREE.Mesh(
+		new THREE.PlaneGeometry(2, 2, 0),
+		new THREE.MeshBasicMaterial({
+			map: bgTexture
+		})
+	);
+
+	bgMesh.material.depthTest = false;
+	bgMesh.material.depthWrite = false;
+	bgScene.add(bgCamera);
+	bgScene.add(bgMesh);
 
 	var entities = {
 		floor: entityFactory.floor(),
@@ -60,6 +76,9 @@ function Game() {
 			system(entities, dt);
 		});
 
+		renderer.autoClear = false;
+		renderer.clear();
+		renderer.render(bgScene, bgCamera);
 		renderer.render(scene, camera);
 		requestAnimationFrame(game.render);
 	};

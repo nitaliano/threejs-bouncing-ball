@@ -4,7 +4,6 @@ module.exports = {
 	renderer: function () {
 		var renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(window.innerWidth, window.innerHeight);
-		renderer.setClearColor(0xcccccc, 1);
 		document.getElementById('webgl-container').appendChild(renderer.domElement);
 		return renderer;
 	},
@@ -17,9 +16,13 @@ module.exports = {
 		return new THREE.Scene();
 	},
 
-	camera: function () {
+	perspectiveCamera: function (x, y, z) {
 		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
-		camera.position.set(0, 150, 800);
+		camera.position.set(x, y, z);
 		return camera;
+	},
+
+	camera: function () {
+		return new THREE.Camera();
 	}
 };

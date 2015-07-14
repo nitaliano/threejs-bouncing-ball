@@ -44,19 +44,35 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
- var entityFactory = __webpack_require__(24),
+ var entityFactory = __webpack_require__(26),
  	THREE = __webpack_require__(1),
- 	threeFactory = __webpack_require__(25);
+ 	threeFactory = __webpack_require__(27);
 
- __webpack_require__(11);
+ __webpack_require__(12);
  function Game() {
  	var game = this;
  	var scene = threeFactory.scene();
+ 	var bgScene = threeFactory.scene();
  	var renderer = threeFactory.renderer();
- 	var camera = threeFactory.camera();
+ 	var camera = threeFactory.perspectiveCamera(0, 100, 900);
+ 	var bgCamera = threeFactory.camera();
  	var clock = threeFactory.clock();
 
  	camera.lookAt(scene.position);
+
+ 	var bgTexture = THREE.ImageUtils.loadTexture(__webpack_require__(13));
+
+ 	var bgMesh = new THREE.Mesh(
+ 		new THREE.PlaneGeometry(2, 2, 0),
+ 		new THREE.MeshBasicMaterial({
+ 			map: bgTexture
+ 		})
+ 	);
+
+ 	bgMesh.material.depthTest = false;
+ 	bgMesh.material.depthWrite = false;
+ 	bgScene.add(bgCamera);
+ 	bgScene.add(bgMesh);
 
  	var entities = {
  		floor: entityFactory.floor(),
@@ -72,8 +88,8 @@
  	}
 
  	var systems = [
- 		__webpack_require__(27),
- 		__webpack_require__(28)
+ 		__webpack_require__(29),
+ 		__webpack_require__(30)
  	];
 
  	Game.prototype.init = function () {
@@ -106,6 +122,9 @@
  			system(entities, dt);
  		});
 
+ 		renderer.autoClear = false;
+ 		renderer.clear();
+ 		renderer.render(bgScene, bgCamera);
  		renderer.render(scene, camera);
  		requestAnimationFrame(game.render);
  	};
@@ -35785,7 +35804,7 @@
  }
  exports.isPrimitive = isPrimitive;
 
- exports.isBuffer = __webpack_require__(9);
+ exports.isBuffer = __webpack_require__(10);
 
  function objectToString(o) {
    return Object.prototype.toString.call(o);
@@ -35829,7 +35848,7 @@
   *     prototype.
   * @param {function} superCtor Constructor function to inherit prototype from.
   */
- exports.inherits = __webpack_require__(8);
+ exports.inherits = __webpack_require__(9);
 
  exports._extend = function(origin, add) {
    // Don't do anything if add isn't an object
@@ -35847,13 +35866,13 @@
    return Object.prototype.hasOwnProperty.call(obj, prop);
  }
 
- /* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(7)))
+ /* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(8)))
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
- var Sphere = __webpack_require__(4);
+ var Sphere = __webpack_require__(5);
 
  var Box = {};
  Box.SIZE = 64;
@@ -35868,6 +35887,22 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+ var Box = __webpack_require__(3);
+
+ var Floor = {};
+
+ Floor.SIZE = 1200;
+ Floor.BOUNDS = {
+ 	LARGE: Floor.SIZE / 2 - Box.SIZE / 2,
+ 	SMALL: -Floor.SIZE / 2 + Box.SIZE / 2
+ };
+
+ module.exports = Floor;
+
+/***/ },
+/* 5 */
 /***/ function(module, exports) {
 
  module.exports = {
@@ -35875,10 +35910,10 @@
  };
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
- exports = module.exports = __webpack_require__(6)();
+ exports = module.exports = __webpack_require__(7)();
  // imports
 
 
@@ -35889,7 +35924,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
  /*
@@ -35945,7 +35980,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
  // shim for using process in browser
@@ -36041,7 +36076,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
  if (typeof Object.create === 'function') {
@@ -36070,7 +36105,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
  module.exports = function isBuffer(arg) {
@@ -36081,7 +36116,7 @@
  }
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
  /*
@@ -36306,16 +36341,16 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
  // style-loader: Adds some css to the DOM by adding a <style> tag
 
  // load the styles
- var content = __webpack_require__(5);
+ var content = __webpack_require__(6);
  if(typeof content === 'string') content = [[module.id, content, '']];
  // add the styles to the DOM
- var update = __webpack_require__(10)(content, {});
+ var update = __webpack_require__(11)(content, {});
  if(content.locals) module.exports = content.locals;
  // Hot Module Replacement
  if(false) {
@@ -36332,7 +36367,13 @@
  }
 
 /***/ },
-/* 12 */
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+ module.exports = __webpack_require__.p + "442af6766772e4c526d08bce082d70dc.jpg"
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
  /* WEBPACK VAR INJECTION */(function(global) {
@@ -36370,7 +36411,7 @@
  /* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
  //     uuid.js
@@ -36381,7 +36422,7 @@
  // Unique ID creation requires a high quality random # generator.  We feature
  // detect to determine the best RNG source, normalizing to a function that
  // returns 128-bits of randomness, since that's what's usually required
- var _rng = __webpack_require__(12);
+ var _rng = __webpack_require__(14);
 
  // Maps for number <-> hex string conversion
  var _byteToHex = [];
@@ -36559,7 +36600,7 @@
 
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports) {
 
  module.exports = Apperance;
@@ -36569,7 +36610,7 @@
  }
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
  var BoxConstants = __webpack_require__(3),
@@ -36582,7 +36623,7 @@
  	Box.super_.call(
  		this,
  		new THREE.BoxGeometry(BoxConstants.SIZE, BoxConstants.SIZE, BoxConstants.SIZE, 4, 4, 4),
- 		new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+ 		new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true })
  	)
  	this.name = 'box';
  	this.position.set(0, 32, 0);
@@ -36591,12 +36632,12 @@
  util.inherits(Box, THREE.Mesh);
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
  var THREE = __webpack_require__(1),
  	util = __webpack_require__(2),
- 	FloorConstants = __webpack_require__(29);
+ 	FloorConstants = __webpack_require__(4);
 
  module.exports = Floor;
 
@@ -36604,7 +36645,7 @@
  	Floor.super_.call(
  		this,
  		new THREE.PlaneGeometry(FloorConstants.SIZE, FloorConstants.SIZE, 10, 10),
- 		new THREE.MeshBasicMaterial({ color: 0x444444, side: THREE.DoubleSide })
+ 		new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true, side: THREE.DoubleSide })
  	);
  	this.name = 'floor';
  	this.rotation.x = Math.PI / 2;
@@ -36613,7 +36654,7 @@
  util.inherits(Floor, THREE.Mesh);
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
  var THREE = __webpack_require__(1),
@@ -36624,7 +36665,7 @@
  function Light() {
  	Light.super_.call(this, 0xffffff);
  	this.name = 'light';
- 	this.position.x = 0;
+ 	this.position.x = -30;
  	this.position.y = 0;
  	this.position.z = 800;
  }
@@ -36632,7 +36673,7 @@
  util.inherits(Light, THREE.PointLight);
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
  module.exports = Moveable;
@@ -36642,13 +36683,13 @@
  }
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
  var THREE = __webpack_require__(1),
- 	helpers = __webpack_require__(26),
+ 	helpers = __webpack_require__(28),
  	util = __webpack_require__(2),
- 	SphereConstants = __webpack_require__(4);
+ 	SphereConstants = __webpack_require__(5);
 
  module.exports = Sphere;
 
@@ -36669,10 +36710,10 @@
  util.inherits(Sphere, THREE.Mesh);
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
- var VelocityConstants = __webpack_require__(22),
+ var VelocityConstants = __webpack_require__(24),
  	util = __webpack_require__(2),
  	THREE = __webpack_require__(1);
 
@@ -36691,7 +36732,7 @@
  util.inherits(Velocity, THREE.Vector3);
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
  module.exports = {
@@ -36702,7 +36743,7 @@
  };
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
  module.exports = {
@@ -36710,10 +36751,10 @@
  };
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
- var uuid = __webpack_require__(13),
+ var uuid = __webpack_require__(15),
  	entityCount = 0;
 
  module.exports = Entity;
@@ -36743,20 +36784,20 @@
  };
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
- var Entity = __webpack_require__(23),
+ var Entity = __webpack_require__(25),
  	THREE = __webpack_require__(1);
 
  var Components = {
- 	Apperance: __webpack_require__(14),
- 	Box: __webpack_require__(15),
- 	Light: __webpack_require__(17),
- 	Moveable: __webpack_require__(18),
- 	Sphere: __webpack_require__(19),
- 	Velocity: __webpack_require__(20),
- 	Floor: __webpack_require__(16)
+ 	Apperance: __webpack_require__(16),
+ 	Box: __webpack_require__(17),
+ 	Light: __webpack_require__(19),
+ 	Moveable: __webpack_require__(20),
+ 	Sphere: __webpack_require__(21),
+ 	Velocity: __webpack_require__(22),
+ 	Floor: __webpack_require__(18)
  };
 
  module.exports = {
@@ -36788,7 +36829,7 @@
  };
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
  var THREE = __webpack_require__(1);
@@ -36797,7 +36838,6 @@
  	renderer: function () {
  		var renderer = new THREE.WebGLRenderer({ antialias: true });
  		renderer.setSize(window.innerWidth, window.innerHeight);
- 		renderer.setClearColor(0xcccccc, 1);
  		document.getElementById('webgl-container').appendChild(renderer.domElement);
  		return renderer;
  	},
@@ -36810,15 +36850,19 @@
  		return new THREE.Scene();
  	},
 
- 	camera: function () {
+ 	perspectiveCamera: function (x, y, z) {
  		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20000);
- 		camera.position.set(0, 150, 800);
+ 		camera.position.set(x, y, z);
  		return camera;
+ 	},
+
+ 	camera: function () {
+ 		return new THREE.Camera();
  	}
  };
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports) {
 
  module.exports = {
@@ -36828,7 +36872,7 @@
  };
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
  var Bounds = __webpack_require__(3).BOUNDS;
@@ -36859,11 +36903,11 @@
  }
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
- var Keys = __webpack_require__(21),
- 	Floor = __webpack_require__(29),
+ var Keys = __webpack_require__(23),
+ 	Floor = __webpack_require__(4),
  	boxPosition= { x: 0, z: 0};
 
  module.exports = function (entities) {
@@ -36917,22 +36961,6 @@
  	boxPosition.x = 0;
  	boxPosition.z = 0;
  });
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
- var Box = __webpack_require__(3);
-
- var Floor = {};
-
- Floor.SIZE = 1000;
- Floor.BOUNDS = {
- 	LARGE: Floor.SIZE / 2 - Box.SIZE / 2,
- 	SMALL: -Floor.SIZE / 2 + Box.SIZE / 2
- };
-
- module.exports = Floor;
 
 /***/ }
 /******/ ]);

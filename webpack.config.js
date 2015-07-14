@@ -23,6 +23,10 @@ var appConfig = {
 				loader: 'json-loader'
 			},
 			{
+				test: /\.jpg/,
+				loader: 'url-loader?limit=10000&mimetype=image/jpeg'
+			},
+			{
 				test: /\.css$/,
 				loader: 'style-loader!css-loader'
 			}
