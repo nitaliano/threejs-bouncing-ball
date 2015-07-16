@@ -1,6 +1,7 @@
 var THREE = require('three.js'),
 	helpers = require('../helpers'),
 	util = require('util'),
+	Ratio = require('../constants/ratio'),
 	SphereConstants = require('../constants/sphere');
 
 module.exports = Sphere;
@@ -16,7 +17,7 @@ function Sphere() {
 		})
 	);
 	this.name = 'sphere';
-	this.position.set(0, 32, 0);
+	this.position.set(0, -300 * Ratio.HEIGHT, 0);
 }
 
 util.inherits(Sphere, THREE.Mesh);
