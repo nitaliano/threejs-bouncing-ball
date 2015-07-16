@@ -24,7 +24,7 @@ module.exports = function (entities) {
 };
 
 function isInBounds(dx, dz) {
-	if ((dx < Floor.BOUNDS.SMALL || dz < Floor.BOUNDS.SMALL) || (dx > Floor.BOUNDS.LARGE || dz > Floor.BOUNDS.LARGE)) {
+	if ((dx < Floor.BOUNDS.X_SMALL || dz < Floor.BOUNDS.Z_SMALL) || (dx > Floor.BOUNDS.X_LARGE || dz > Floor.BOUNDS.Z_LARGE)) {
 		return false;
 	}
 	return true;

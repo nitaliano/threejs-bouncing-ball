@@ -15,7 +15,6 @@ function Game() {
 	camera.lookAt(scene.position);
 
 	var bgTexture = THREE.ImageUtils.loadTexture(require('./assets/bg.jpg'));
-
 	var bgMesh = new THREE.Mesh(
 		new THREE.PlaneGeometry(2, 2, 0),
 		new THREE.MeshBasicMaterial({
