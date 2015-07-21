@@ -1,32 +1,38 @@
 var Keys = require('../constants/keys'),
-	Floor = require('../constants/floor'),
-	boxPosition= { x: 0, z: 0};
+	THREE = require('three.js');
+
+var boxPosition= { x: 0, z: 0};
+var floorBoundingBox, bBox;
 
 module.exports = function (entities) {
-	var entity = entities.container;
+	if (!floorBoundingBox) {
+		floorBoundingBox = new THREE.Box3().setFromObject(entities.floor.components.box);
+	}
 
-	if (entity.components.box && entity.components.moveable) {
-		var dx = entity.components.box.position.x + boxPosition.x;
-		var dz = entity.components.box.position.z + boxPosition.z;
+	if (entities.container.components.moveable && isInBounds(entities.container.components.box)) {
+		entities.container.components.box.position.x = entities.container.components.box.position.x + boxPosition.x;
+		entities.container.components.box.position.z = entities.container.components.box.position.z + boxPosition.z;
 
-		if (isInBounds(dx, dz)) {
-			entity.components.box.position.x = dx;
-			entity.components.box.position.z = dz;
-
-			if (entities.balls) {
-				for (var i = 0; i < entities.balls.length; i++) {
-					entities.balls[i].components.sphere.position.x += boxPosition.x;
-					entities.balls[i].components.sphere.position.z += boxPosition.z;
-				}
+		if (entities.balls) {
+			for (var i = 0; i < entities.balls.length; i++) {
+				entities.balls[i].components.sphere.position.x += boxPosition.x;
+				entities.balls[i].components.sphere.position.z += boxPosition.z;
 			}
 		}
 	}
 };
 
-function isInBounds(dx, dz) {
-	if ((dx < Floor.BOUNDS.X_SMALL || dz < Floor.BOUNDS.Z_SMALL) || (dx > Floor.BOUNDS.X_LARGE || dz > Floor.BOUNDS.Z_LARGE)) {
+function isInBounds(box) {
+	bBox = bBox ? bBox.setFromObject(box) : new THREE.Box3().setFromObject(box);
+
+	if (bBox.min.x + boxPosition.x < floorBoundingBox.min.x || bBox.min.z + boxPosition.z < floorBoundingBox.min.z) {
 		return false;
 	}
+
+	if (bBox.max.x + boxPosition.x > floorBoundingBox.max.x || bBox.max.z + boxPosition.z > floorBoundingBox.max.z) {
+		return false;
+	}
+
 	return true;
 }
 

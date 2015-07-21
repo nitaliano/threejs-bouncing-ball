@@ -1,23 +1,24 @@
-var THREE = require('three.js'),
-	helpers = require('../helpers'),
+var helpers = require('../helpers'),
 	util = require('util'),
-	Ratio = require('../constants/ratio'),
-	SphereConstants = require('../constants/sphere');
+	THREE = require('three.js');
 
 module.exports = Sphere;
 
-function Sphere() {
+var defaults = {
+	widthSeg: 32,
+	heightSeg: 32,
+	color: '#ffffff'
+};
+
+function Sphere(options) {
+	this.options = helpers.getOptions(defaults, options);
+
 	Sphere.super_.call(
 		this,
-		new THREE.SphereGeometry(SphereConstants.RADIUS, 32, 32),
-		new THREE.MeshPhongMaterial({
-			color: helpers.genRandomHexColor(),
-			specular:0x333333,
-			shininess: 100
-		})
+		new THREE.SphereGeometry(this.options.radius, this.options.widthSeg, this.options.heightSeg),
+		new THREE.MeshPhongMaterial({ color: this.options.color, specular: 0x333333, shininess: 100 })
 	);
 	this.name = 'sphere';
-	this.position.set(0, -300 * Ratio.HEIGHT, 0);
 }
 
 util.inherits(Sphere, THREE.Mesh);

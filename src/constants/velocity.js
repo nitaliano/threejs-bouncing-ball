@@ -1,3 +1,1 @@
-module.exports = {
-	BASE: 90
-};
+module.exports = 90;

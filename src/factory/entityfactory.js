@@ -4,35 +4,34 @@ var Entity = require('../core/entity'),
 var Components = {
 	Apperance: require('../components/apperance'),
 	Box: require('../components/box'),
-	Light: require('../components/light'),
+	Light: require('../components/pointlight'),
 	Moveable: require('../components/moveable'),
 	Sphere: require('../components/sphere'),
-	Velocity: require('../components/velocity'),
-	Floor: require('../components/floor')
+	Velocity: require('../components/velocity')
 };
 
 module.exports = {
-	ball: function () {
+	ball: function (options) {
 		return new Entity()
 			.addComponent(new Components.Apperance())
-			.addComponent(new Components.Sphere())
+			.addComponent(new Components.Sphere(options && options.sphere))
 			.addComponent(new Components.Velocity())
 	},
 
-	floor: function () {
+	floor: function (options) {
 		return new Entity()
 			.addComponent(new Components.Apperance())
-			.addComponent(new Components.Floor());
+			.addComponent(new Components.Box(options && options.box));
 	},
 
-	container: function () {
+	container: function (options) {
 		return new Entity()
 			.addComponent(new Components.Apperance())
-			.addComponent(new Components.Box())
+			.addComponent(new Components.Box(options && options.box))
 			.addComponent(new Components.Moveable())
 	},
 
-	light: function () {
+	pointLight: function () {
 		return new Entity()
 			.addComponent(new Components.Apperance())
 			.addComponent(new Components.Light());
